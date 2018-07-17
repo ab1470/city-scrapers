@@ -92,8 +92,12 @@ class Chi_teacherpensionSpider(Spider):
         date = datetime.strptime(date, '%A, %B %d, %Y')
 
         if i == 3:
-        	time = None
-        	note = response.xpath('//*[@id="node-full"]/div/div[2]/p[5]/text()').extract_first()
+            dt = response.xpath('//*[@id="node-full"]/div/div[2]/p[5]/text()').extract_first()
+            dt = dt.replace('a.m.', 'am').replace('p.m.', 'pm')
+
+            time = datetime.strptime(dt, '%A, %B %d, %Y, %I:%M %p').time()
+            note = ''
+
         else:
         	time = datetime.strptime('9:30am', '%I:%M%p').time()
         	note = ''
@@ -103,6 +107,15 @@ class Chi_teacherpensionSpider(Spider):
                     'time': time,
                     'note': note
                 }
+
+        # except:
+        #     return {
+        #                 'date': date,
+        #                 'time': None,
+        #                 'note': """Technology Committee meetings are held in the
+        #                         afternoon. See the agenda for specific times"""
+        #             }
+
 
 
     def _parse_end(self, date):
