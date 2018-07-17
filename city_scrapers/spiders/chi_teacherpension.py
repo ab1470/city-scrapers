@@ -19,8 +19,8 @@ class Chi_teacherpensionSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        
-        for i in range(1,4): 
+
+        for i in range(1,4):
 
             dates = self.get_dates(response, i)
             for date in dates:
@@ -48,7 +48,7 @@ class Chi_teacherpensionSpider(Spider):
             raw = response.xpath('//*[@id="node-full"]/div/div[2]/h3[1]/following-sibling::p[1]/text()').extract()
         else:
             raw = response.xpath('//*[@id="node-full"]/div/div[2]/h3['+str(i)+']/following-sibling::p[2]/text()').extract()
-        
+
         return [date.strip() for date in raw]
 
     def _parse_name(self, response, i):
@@ -61,7 +61,7 @@ class Chi_teacherpensionSpider(Spider):
         	name = response.xpath('//*[@id="node-full"]/div/div[2]/h4[1]/text()').extract_first()
         else:
         	name = response.xpath('//*[@id="node-full"]/div/div[2]/h3['+str(i)+']/text()').extract_first()
-        
+
         return name[0:len(name)-cut]
 
     def _parse_description(self, response, i):
@@ -74,7 +74,7 @@ class Chi_teacherpensionSpider(Spider):
         	return response.xpath('//*[@id="node-full"]/div/div[2]/p[3]/text()').extract_first()
         else:
         	return response.xpath('//*[@id="node-full"]/div/div[2]/p[5]/text()').extract_first()
-        
+
 
     def _parse_classification(self, i):
         """
@@ -90,14 +90,14 @@ class Chi_teacherpensionSpider(Spider):
         Parse start date and time.
         """
         date = datetime.strptime(date, '%A, %B %d, %Y')
-        
-        if i ==3:
+
+        if i == 3:
         	time = None
         	note = response.xpath('//*[@id="node-full"]/div/div[2]/p[5]/text()').extract_first()
         else:
-        	time = datetime.strptime('9:30am', '%H:%M%p').time()
+        	time = datetime.strptime('9:30am', '%I:%M%p').time()
         	note = ''
-        
+
         return {
                     'date': date,
                     'time': time,
@@ -153,4 +153,3 @@ class Chi_teacherpensionSpider(Spider):
             'url': response.url,
             'note': ''
         }]
-
